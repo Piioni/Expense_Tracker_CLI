@@ -39,12 +39,27 @@ public class Expense {
         this.category = category;
     }
 
-
     public int getId() {
         return id;
     }
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Expense.idCounter = idCounter;
     }
 }

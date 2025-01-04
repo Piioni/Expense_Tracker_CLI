@@ -1,15 +1,44 @@
-import java.time.Month;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenseManager {
     private static final List<Expense> expenses = new ArrayList<>();
+    private static final Path FILE_PATH = Path.of("expenses.json");
 
-    public static void saveTasks(){
-        // save the tasks to a file
+    public ExpenseManager() {
+        loadTasks();
     }
 
-    public static void loadTasks(){
+    public static void saveTasks() {
+        // use a StringBuilder to create a string with all the tasks
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        for (Expense expense : expenses) {
+            sb.append("{\n");
+            sb.append("  \"id\": ").append(expense.getId()).append(",\n");
+            sb.append("  \"date\": \"").append(expense.getDate()).append("\",\n");
+            sb.append("  \"description\": \"").append(expense.getDescription()).append("\",\n");
+            sb.append("  \"amount\": ").append(expense.getAmount()).append(",\n");
+            sb.append("  \"category\": \"").append(expense.getCategory()).append("\"\n");
+            sb.append("},\n");
+        }
+        sb.append("]");
+        String tasks = sb.toString();
+        // save the string to a file
+        try {
+            Files.writeString(FILE_PATH, tasks);
+            System.out.println("Tasks saved to file");
+
+        } catch (IOException e) {
+            System.out.println("Error saving tasks to file");
+
+        }
+    }
+
+    public static void loadTasks() {
         // load the tasks from a file
     }
 
@@ -69,11 +98,11 @@ public class ExpenseManager {
     }
 
     // imprimir el total de dinero gastado en un mes específico
-    public static void summaryMonth(Month month, int year) {
+    public static void summaryMonth(int month, int year) {
         double total = 0;
         for (Expense expense : expenses) {
             // Verificar si la fecha de la expense coincide con el mes y año dados
-            if (expense.getDate().getYear() == year && expense.getDate().getMonth() == month) {
+            if (expense.getDate().getYear() == year && expense.getDate().getMonthValue() == month) {
                 total += expense.getAmount();
             }
         }
@@ -89,8 +118,4 @@ public class ExpenseManager {
         }
         return null;
     }
-
-
-
-
 }

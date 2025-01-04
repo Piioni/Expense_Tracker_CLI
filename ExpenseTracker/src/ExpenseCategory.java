@@ -5,7 +5,7 @@ public enum ExpenseCategory {
     UTILITIES ("Utilities"),
     MISCELLANEOUS ("Miscellaneous");
 
-    private String category;
+    private final String category;
 
     ExpenseCategory(String category) {
         this.category = category;
@@ -14,5 +14,4 @@ public enum ExpenseCategory {
     public String getCategory() {
         return category;
     }
-
 }

@@ -12,6 +12,10 @@ public class Main {
             return;
         }
 
+        ExpenseManager expenseManager = new ExpenseManager();
+
+
+
         // Get the command from the first argument
         String command = args[0];
 
@@ -100,17 +104,17 @@ public class Main {
                 } else {
                     try {
                         Map<String, String> summaryArguments = parseArguments(args);
-                        String month = summaryArguments.get("--month");
+                        String monthStr = summaryArguments.get("--month");
                         String yearString = summaryArguments.get("--year");
 
-                        if (month == null || yearString == null) {
+                        if (monthStr == null || yearString == null) {
                             throw new IllegalArgumentException("Error, missing --month or --year");
                         }
 
                         // Parse the month and year to show the summary
-                        Month monthEnum = Month.valueOf(month.toUpperCase());
+                        int month = monthStr.length() == 1 ? Integer.parseInt("0" + monthStr) : Integer.parseInt(monthStr);
                         int year = Integer.parseInt(yearString);
-                        ExpenseManager.summaryMonth(monthEnum, year);
+                        ExpenseManager.summaryMonth(month, year);
 
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid year");
@@ -150,6 +154,6 @@ public class Main {
         System.out.println(" delete --id <id> -> Delete an existing expense by id");
         System.out.println(" list -> List all expenses");
         System.out.println(" summary -> Show a summary of all expenses");
-        System.out.println(" summary --month <month> --year <year> -> Show a summary of all expenses for a specific month and year");
+        System.out.println(" summary --month <month 1-12 > --year <year> -> Show a summary of all expenses for a specific month and year");
     }
 }
