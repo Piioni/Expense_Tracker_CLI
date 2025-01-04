@@ -11,5 +11,8 @@ public enum ExpenseCategory {
         this.category = category;
     }
 
+    public String getCategory() {
+        return category;
+    }
 
 }

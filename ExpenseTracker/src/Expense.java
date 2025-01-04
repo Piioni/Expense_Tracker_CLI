@@ -1,14 +1,15 @@
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class Expense {
-    private UUID id;
+    private final int id;
     private LocalDate date;
     private String description;
     private double amount;
     private ExpenseCategory category;
+    private static int idCounter = 0;
 
     public Expense(String description, double amount, ExpenseCategory category) {
+        this.id = idCounter++;
         this.description = description;
         this.amount = amount;
         this.category = category;
@@ -39,4 +40,11 @@ public class Expense {
     }
 
 
+    public int getId() {
+        return id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
 }
