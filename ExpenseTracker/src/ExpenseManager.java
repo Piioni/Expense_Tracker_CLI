@@ -47,9 +47,9 @@ public class ExpenseManager {
 
     public static void listExpenses() {
         // imprimir la lista de expenses con un formato específico
-        System.out.printf("%-10s | %-10s | %-25s  | %10.2f | %-10s%n", "ID", "Date", "Description", "Amount", "Category");
+        System.out.printf("%-10s | %-15s | %-30s  | %10s | %-15s%n", "ID", "Date", "Description", "Amount", "Category");
         for (Expense expense : expenses) {
-            System.out.printf("%-10s | %-10s | %-25s  | %10.2f | %-10s%n",
+            System.out.printf("%-10s | %-15s | %-30s  | %10.2f | %-15s%n",
                     expense.getId(),
                     expense.getDate(),
                     expense.getDescription(),

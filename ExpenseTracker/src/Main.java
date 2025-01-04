@@ -8,6 +8,7 @@ public class Main {
         // Check if there are no arguments
         if (args.length == 0) {
             System.out.println("Please provide an input");
+            showUsage();
             return;
         }
 
