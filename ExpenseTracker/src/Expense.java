@@ -10,6 +10,15 @@ public class Expense {
 
     public Expense(String description, double amount, ExpenseCategory category) {
         this.id = idCounter++;
+        this.date = LocalDate.now();
+        this.description = description;
+        this.amount = amount;
+        this.category = category;
+    }
+
+    public Expense(int id, LocalDate date, String description, double amount, ExpenseCategory category) {
+        this.id = id;
+        this.date = date;
         this.description = description;
         this.amount = amount;
         this.category = category;

@@ -1,4 +1,3 @@
-import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,8 +12,6 @@ public class Main {
         }
 
         ExpenseManager expenseManager = new ExpenseManager();
-
-
 
         // Get the command from the first argument
         String command = args[0];
@@ -34,7 +31,8 @@ public class Main {
 
                     // Parse the amount to a double and add the expense
                     double amount = Double.parseDouble(amountString);
-                    ExpenseManager.addExpense(description, amount);
+                    expenseManager.addExpense(description, amount);
+                    expenseManager.saveTasks();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid amount");
@@ -60,7 +58,8 @@ public class Main {
                     // Parse the id and amount to update the expense
                     int id = Integer.parseInt(idStr);
                     double amount = Double.parseDouble(amountString);
-                    ExpenseManager.updateExpense(id, description, amount);
+                    expenseManager.updateExpense(id, description, amount);
+                    expenseManager.saveTasks();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid amount");
@@ -80,8 +79,9 @@ public class Main {
                     } else {
                         // Parse the id to delete the expense
                         int id = Integer.parseInt(args[1]);
-                        ExpenseManager.deleteExpense(id);
+                        expenseManager.deleteExpense(id);
                     }
+                    expenseManager.saveTasks();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid id");
@@ -94,13 +94,13 @@ public class Main {
 
             // Case to list all expenses
             case "list":
-                ExpenseManager.listExpenses();
+                expenseManager.listExpenses();
                 break;
 
             // Case to show a summary of all expenses
             case "summary":
                 if (args.length == 1) {
-                    ExpenseManager.summary();
+                    expenseManager.summary();
                 } else {
                     try {
                         Map<String, String> summaryArguments = parseArguments(args);
@@ -114,7 +114,7 @@ public class Main {
                         // Parse the month and year to show the summary
                         int month = monthStr.length() == 1 ? Integer.parseInt("0" + monthStr) : Integer.parseInt(monthStr);
                         int year = Integer.parseInt(yearString);
-                        ExpenseManager.summaryMonth(month, year);
+                        expenseManager.summaryMonth(month, year);
 
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid year");
