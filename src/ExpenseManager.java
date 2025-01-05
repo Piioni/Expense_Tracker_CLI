@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -114,7 +115,6 @@ public class ExpenseManager {
     }
 
     public void updateExpense(int id, String description, double amount, ExpenseCategory category) {
-        // buscar si existe la expense con él, id dado
         Expense expense = getExpenseById(id);
         if (expense == null) {
             System.out.println("Error, expense not found");
@@ -127,7 +127,6 @@ public class ExpenseManager {
     }
 
     public void deleteExpense(int id) {
-        // buscar si existe la expense con él, id dado
         Expense expense = getExpenseById(id);
         if (expense == null) {
             System.out.println("Error, expense not found");
@@ -169,7 +168,31 @@ public class ExpenseManager {
                 total += expense.getAmount();
             }
         }
-        System.out.println("Total expenses for " + month + ": " + total);
+        System.out.println("Total expenses in " + Month.of(month).toString() + " of "+ year + " : " + total);
+    }
+
+    // imprimir el total de dinero gastado en un año específico
+    public void summaryYear(int year) {
+        double total = 0;
+        for (Expense expense : expenses) {
+            // Verificar si el año de la expense coincide con el año dado
+            if (expense.getDate().getYear() == year) {
+                total += expense.getAmount();
+            }
+        }
+        System.out.println("Total expenses for " + year + ": " + total);
+    }
+
+    // imprimir el total de dinero gastado en una categoría específica
+    public void summaryCategory(ExpenseCategory category) {
+        double total = 0;
+        for (Expense expense : expenses) {
+            // Verificar si la categoría de la expense coincide con la categoría dada
+            if (expense.getCategory() == category) {
+                total += expense.getAmount();
+            }
+        }
+        System.out.println("Total expenses for " + category.getCategory() + ": " + total);
     }
 
     // metodo para obtener una expense por su id

@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Main {
+public class ExpenseCLIApp {
     public static void main(String[] args) {
 
         // Check if there are no arguments
@@ -15,9 +15,14 @@ public class Main {
         ExpenseManager expenseManager = new ExpenseManager();
 
         // Get the command from the first argument
-        String command = args[0];
+        String command = args[0].toLowerCase();
 
         switch (command) {
+            // Case to show the usage
+            case "-h":
+                showUsage();
+                break;
+
             // Case to add a new expense
             case "add":
                 try {
@@ -136,7 +141,7 @@ public class Main {
                         throw new IllegalArgumentException("Error, missing id");
                     } else {
                         // Parse the id to delete the expense
-                        int id = Integer.parseInt(args[1]);
+                        int id = Integer.parseInt(args[2]);
                         expenseManager.deleteExpense(id);
                     }
                     expenseManager.saveTasks();
@@ -156,43 +161,95 @@ public class Main {
                 expenseManager.listExpenses();
                 break;
 
-            // Case to show a summary of all expenses
+            // Case to show a summary report
             case "summary":
-                if (args.length == 1) {
-                    expenseManager.summary();
-                } else {
-                    try {
-                        Map<String, String> summaryArguments = parseArguments(args);
-                        String monthStr = summaryArguments.get("--month");
-                        String yearString = summaryArguments.get("--year");
-
-                        if (monthStr == null || yearString == null) {
-                            throw new IllegalArgumentException("Error, missing --month or --year");
-                        }
-
-                        // Parse the month and year to show the summary
-                        int month = monthStr.length() == 1 ? Integer.parseInt("0" + monthStr) : Integer.parseInt(monthStr);
-                        int year = Integer.parseInt(yearString);
-                        expenseManager.summaryMonth(month, year);
-
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid year");
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(e.getMessage());
-                    } catch (Exception e) {
-                        System.out.println("Error, invalid input");
-                    }
+                if (args.length < 2) {
+                    System.out.println("Error, missing option");
+                    showUsage();
+                    return;
                 }
-                break;
 
-            // por si el comando no es ninguno de los anteriores
-            default:
-                System.out.println("Invalid command");
-                showUsage();
-                break;
+                String optionSummary = args[1].toLowerCase();
+                switch (optionSummary){
+                    // Show the summary of all expenses
+                    case "-all":
+                        expenseManager.summary();
+                        break;
+
+                    case "--category":
+                        try {
+                            Map<String, String> summaryArguments = parseArguments(args);
+                            String category = summaryArguments.get("--category");
+
+                            if (category == null) {
+                                throw new IllegalArgumentException("Error, missing --category");
+                            }
+
+                            expenseManager.summaryCategory(ExpenseCategory.valueOf(category.toUpperCase()));
+
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } catch (Exception e) {
+                            System.out.println("Error, invalid input");
+                        }
+                        break;
+
+                    case "--month":
+                        try {
+                            Map<String, String> summaryArguments = parseArguments(args);
+                            String monthStr = summaryArguments.get("--month");
+                            String yearString = summaryArguments.get("--year");
+
+                            if (monthStr == null || yearString == null) {
+                                throw new IllegalArgumentException("Error, missing --month or --year");
+                            }
+
+                            // Parse the month and year to show the summary
+                            int month = monthStr.length() == 1 ? Integer.parseInt("0" + monthStr) : Integer.parseInt(monthStr);
+                            int year = Integer.parseInt(yearString);
+                            expenseManager.summaryMonth(month, year);
+
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid year");
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } catch (Exception e) {
+                            System.out.println("Error, invalid input");
+                        }
+                        break;
+
+                    case "--year":
+                        try {
+                            Map<String, String> summaryArguments = parseArguments(args);
+                            String yearString = summaryArguments.get("--year");
+
+                            if (yearString == null) {
+                                throw new IllegalArgumentException("Error, missing --year");
+                            }
+
+                            // Parse the year to show the summary
+                            int year = Integer.parseInt(yearString);
+                            expenseManager.summaryYear(year);
+
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid year");
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        } catch (Exception e) {
+                            System.out.println("Error, invalid input");
+                        }
+                        break;
+
+                    // por si el comando no es ninguno de los anteriores
+                    default:
+                        System.out.println("Invalid command");
+                        showUsage();
+                        break;
+                }
         }
     }
 
+    // Parse the arguments to a hashmap
     private static Map<String, String> parseArguments(String[] argsArray) {
         // Create a hashmap to store the arguments
         Map<String, String> arguments = new HashMap<>();
@@ -214,12 +271,14 @@ public class Main {
     // Show the usage of the program
     private static void showUsage() {
         System.out.println("Usage: <option> <arguments>");
-        System.out.println(" add --description <description> --amount <amount> -> Add a new expense");
-        System.out.println(" update --id <id> --description <description> --amount <amount> -> Update an existing expense");
+        System.out.println(" add --d <description> --a <amount> -> Add a new expense");
+        System.out.println(" update --id <id> --d <description> --a <amount> -> Update an existing expense");
         System.out.println(" delete --id <id> -> Delete an existing expense by id");
         System.out.println(" list -> List all expenses");
-        System.out.println(" summary -> Show a summary of all expenses");
+        System.out.println(" summary -all -> Show a summary of all expenses");
         System.out.println(" summary --month <month 1-12 > --year <year> -> Show a summary of all expenses for a specific month and year");
+        System.out.println(" summary --year <year> -> Show a summary of all expenses for a specific year");
+        System.out.println(" summary --category <category> -> Show a summary of all expenses for a specific category");
     }
 
     public static void showCategories() {
