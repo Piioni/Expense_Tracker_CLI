@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,8 +32,32 @@ public class Main {
 
                     // Parse the amount to a double and add the expense
                     double amount = Double.parseDouble(amountString);
-                    expenseManager.addExpense(description, amount);
+                    System.out.println("Select a category:");
+                    showCategories();
+                    Scanner sc = new Scanner(System.in);
+                    int category = sc.nextInt();
+                    switch (category) {
+                        case 1:
+                            expenseManager.addExpense(description, amount, ExpenseCategory.FOOD);
+                            break;
+                        case 2:
+                            expenseManager.addExpense(description, amount, ExpenseCategory.TRANSPORTATION);
+                            break;
+                        case 3:
+                            expenseManager.addExpense(description, amount, ExpenseCategory.ENTERTAINMENT);
+                            break;
+                        case 4:
+                            expenseManager.addExpense(description, amount, ExpenseCategory.UTILITIES);
+                            break;
+                        case 5:
+                            expenseManager.addExpense(description, amount, ExpenseCategory.MISCELLANEOUS);
+                            break;
+                        default:
+                            System.out.println("Invalid category");
+                            break;
+                    }
                     expenseManager.saveTasks();
+                    sc.close();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid amount");
@@ -42,6 +67,7 @@ public class Main {
                     System.out.println("Error, invalid input");
                 }
                 break;
+
 
             // Case to update an existing expense
             case "update":
@@ -70,6 +96,7 @@ public class Main {
                 }
                 break;
 
+
             // Case to delete an existing expense
             case "delete":
                 try {
@@ -91,6 +118,7 @@ public class Main {
                     System.out.println("Error, invalid input");
                 }
                 break;
+
 
             // Case to list all expenses
             case "list":
@@ -161,5 +189,16 @@ public class Main {
         System.out.println(" list -> List all expenses");
         System.out.println(" summary -> Show a summary of all expenses");
         System.out.println(" summary --month <month 1-12 > --year <year> -> Show a summary of all expenses for a specific month and year");
+    }
+
+    public static void showCategories() {
+        System.out.println("""
+                Categories:
+                1. Food
+                2. Transportation
+                3. Entertainment
+                4. Utilities
+                5. Miscellaneous
+                """);
     }
 }

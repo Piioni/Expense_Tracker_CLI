@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ExpenseManager {
     private List<Expense> expenses = new ArrayList<>();
@@ -18,6 +19,9 @@ public class ExpenseManager {
         // use a StringBuilder to create a string with all the tasks
         StringBuilder sb = new StringBuilder();
         sb.append("[\n");
+        int idCounter = Expense.getIdCounter();
+        sb.append("{\"" + "idCounter" + "\": ").append(idCounter).append("},\n");
+
         int index = 0;
         int size = expenses.size();
         for (Expense expense : expenses) {
@@ -27,7 +31,7 @@ public class ExpenseManager {
             sb.append("  \"description\": \"").append(expense.getDescription()).append("\",\n");
             sb.append("  \"amount\": ").append(expense.getAmount()).append(",\n");
             sb.append("  \"category\": \"").append(expense.getCategory()).append("\"\n");
-            sb.append("}\n");
+            sb.append("}");
             if (index < size - 1) {
                 sb.append(",\n");
             } index++;
@@ -64,27 +68,32 @@ public class ExpenseManager {
         JsonExpenses = JsonExpenses.replace("[", "")
                 .replace("]", "");
         String[] expenses = JsonExpenses.split("},");
-        System.out.println(Arrays.toString(expenses));
+        int idCounter = Integer.parseInt(expenses[0].replace("{", "").replace("}", "").split(":")[1].strip());
+        Expense.setIdCounter(idCounter);
+        expenses[0] = "";
         for (String expense : expenses) {
+            if (Objects.equals(expense, "")) {
+                continue;
+            }
             expense = expense.replace("{", "");
             expense = expense.replace("}", "");
             String[] fields = expense.split(",");
             int id = Integer.parseInt(fields[0].strip().split(":")[1].strip());
-            String date = fields[1].strip().split(":")[1].strip();
+            String date = fields[1].strip().split(":")[1].strip().replace("\"", "");
             LocalDate localDate = LocalDate.parse(date);
-            String description = fields[2].strip().split(":")[1].strip();
+            String description = fields[2].strip().split(":")[1].strip().replace("\"", "");
             double amount = Double.parseDouble(fields[3].strip().split(":")[1].strip());
-            String category = fields[4].strip().split(":")[1].strip();
+            String category = fields[4].strip().split(":")[1].strip().replace("\"", "");
 
-            Expense storedExpense= new Expense(id, localDate, description, amount, ExpenseCategory.valueOf(category));
+            Expense storedExpense= new Expense(id, localDate, description, amount, ExpenseCategory.valueOf(category.toUpperCase()));
             stored_expenses.add(storedExpense);
         }
         return stored_expenses;
     }
 
     // metodo para agregar una expense con determinada description y monto
-    public void addExpense(String description, double amount) {
-        Expense expense = new Expense(description, amount, null);
+    public void addExpense(String description, double amount, ExpenseCategory category) {
+        Expense expense = new Expense(description, amount, category);
         expenses.add(expense);
         System.out.println("Expense added successfully, ID: " + expense.getId());
     }
