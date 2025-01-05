@@ -94,9 +94,8 @@ public class ExpenseManager {
         Expense expense = getExpenseById(id);
         if (expense == null) {
             System.out.println("Error, expense not found");
-            return;
         } else {
-            expense.setName(description);
+            expense.setDescription(description);
             expense.setAmount(amount);
             System.out.println("Expense updated successfully");
         }
@@ -107,7 +106,6 @@ public class ExpenseManager {
         Expense expense = getExpenseById(id);
         if (expense == null) {
             System.out.println("Error, expense not found");
-            return;
         } else {
             expenses.remove(expense);
             System.out.println("Expense deleted successfully");
@@ -151,6 +149,7 @@ public class ExpenseManager {
 
     // metodo para obtener una expense por su id
     private Expense getExpenseById(int id) {
+        // buscar la expense con el id dado en la lista de expenses
         for (Expense expense : expenses) {
             if (expense.getId() == id) {
                 return expense;

@@ -125,6 +125,12 @@ public class Main {
                     }
                 }
                 break;
+
+            // por si el comando no es ninguno de los anteriores
+            default:
+                System.out.println("Invalid command");
+                showUsage();
+                break;
         }
     }
 

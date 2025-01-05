@@ -36,10 +36,6 @@ public class Expense {
         return category;
     }
 
-    public void setName(String description) {
-        this.description = description;
-    }
-
     public void setAmount(double amount) {
         this.amount = amount;
     }
