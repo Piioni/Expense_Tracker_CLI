@@ -3,7 +3,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,13 +67,17 @@ public class ExpenseManager {
         JsonExpenses = JsonExpenses.replace("[", "")
                 .replace("]", "");
         String[] expenses = JsonExpenses.split("},");
+        // get the idCounter from the first element
         int idCounter = Integer.parseInt(expenses[0].replace("{", "").replace("}", "").split(":")[1].strip());
         Expense.setIdCounter(idCounter);
+        // remove the first element from the array
         expenses[0] = "";
         for (String expense : expenses) {
+            // exclude empty strings
             if (Objects.equals(expense, "")) {
                 continue;
             }
+            // Assign the values to the expense splitting the json object by commas and removing the brackets
             expense = expense.replace("{", "");
             expense = expense.replace("}", "");
             String[] fields = expense.split(",");
@@ -106,6 +109,19 @@ public class ExpenseManager {
         } else {
             expense.setDescription(description);
             expense.setAmount(amount);
+            System.out.println("Expense updated successfully");
+        }
+    }
+
+    public void updateExpense(int id, String description, double amount, ExpenseCategory category) {
+        // buscar si existe la expense con él, id dado
+        Expense expense = getExpenseById(id);
+        if (expense == null) {
+            System.out.println("Error, expense not found");
+        } else {
+            expense.setDescription(description);
+            expense.setAmount(amount);
+            expense.setCategory(category);
             System.out.println("Expense updated successfully");
         }
     }

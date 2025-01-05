@@ -84,8 +84,39 @@ public class Main {
                     // Parse the id and amount to update the expense
                     int id = Integer.parseInt(idStr);
                     double amount = Double.parseDouble(amountString);
-                    expenseManager.updateExpense(id, description, amount);
+                    Scanner sc = new Scanner(System.in);
+                    System.out.println("Do you want to change the category? (y/n)");
+                    String changeCategory = sc.next();
+                    // Check if the user wants to change the category
+                    if (changeCategory.equals("y")) {
+                        System.out.println("Select a category:");
+                        showCategories();
+                        int category = sc.nextInt();
+                        switch (category) {
+                            case 1:
+                                expenseManager.updateExpense(id, description, amount, ExpenseCategory.FOOD);
+                                break;
+                            case 2:
+                                expenseManager.updateExpense(id, description, amount, ExpenseCategory.TRANSPORTATION);
+                                break;
+                            case 3:
+                                expenseManager.updateExpense(id, description, amount, ExpenseCategory.ENTERTAINMENT);
+                                break;
+                            case 4:
+                                expenseManager.updateExpense(id, description, amount, ExpenseCategory.UTILITIES);
+                                break;
+                            case 5:
+                                expenseManager.updateExpense(id, description, amount, ExpenseCategory.MISCELLANEOUS);
+                                break;
+                            default:
+                                System.out.println("Invalid category");
+                                break;
+                        }
+                    } else {
+                        expenseManager.updateExpense(id, description, amount);
+                    }
                     expenseManager.saveTasks();
+                    sc.close();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid amount");
